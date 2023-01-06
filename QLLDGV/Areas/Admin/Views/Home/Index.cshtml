@@ -1,0 +1,75 @@
+﻿@model PagedList.IPagedList<Database.Framework.Message>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Tin nhắn của giáo viên";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<div>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+        <table class="table1" align="center" style="margin-bottom: 20px">
+            <tr>
+                <td>
+                    <div>Tìm kiếm</div>
+                </td>
+                <td>
+                    @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                </td>
+                <td>
+                    <input type="submit" name="submit" value="Tìm kiếm" style="margin-left: 5px;width:100px;
+                            background-color: blue;color:white" />
+                    <input type="button" name="Nhapmoi" value="Nhập mới" style="margin-left: 5px;width:100px;
+                            background-color: blue;color:white" onclick="location.href='@Url.Action("Index", "Home/Index")'" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+@*@ViewBag.TB*@
+<table class="table">
+    <tr>
+        <th>
+            Người gửi
+        </th>
+        <th>
+            Nội dung
+        </th>
+        <th>
+            Ngày gửi
+        </th>
+        <th>
+            Tình trạng
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.GIAOVIEN.HoTenGV
+            </td>
+            <td>
+                @item.NoiDung
+            </td>
+            <td>
+                @item.NgayGui
+            </td>
+            <td>
+                @item.Tinhtrang
+            </td>
+            <td>
+                @Html.ActionLink("Xóa", "Delete", new { id = item.MaMail })
+            </td>
+        </tr>
+    }
+</table>
+<div class="page-count" style="display: inline-block; vertical-align:middle;">
+    Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) trên @Model.PageCount
+</div>
+<br />
+<div class="pagination" style="display: inline-block; vertical-align: middle;">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+</div>
+

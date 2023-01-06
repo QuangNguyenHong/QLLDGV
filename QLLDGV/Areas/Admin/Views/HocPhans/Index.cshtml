@@ -1,0 +1,68 @@
+﻿@model PagedList.IPagedList<Database.Framework.HocPhan>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Danh sách học phần";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2>Danh sách học phần</h2>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<p>
+    @Html.ActionLink("Thêm mới", "Create")
+</p>
+<div>
+    @using (Html.BeginForm("Index", "HocPhans", FormMethod.Get))
+    {
+        <table class="table1" align="center" style="margin-bottom: 20px">
+            <tr>
+                <td>
+                    <div>Tìm kiếm</div>
+                </td>
+                <td>
+                    @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control" })
+                </td>
+                <td>
+                    <input type="submit" name="submit" value="Tìm kiếm" style="margin-left: 5px;width:100px;
+                            background-color: blue;color:white" />
+                    <input type="button" name="Nhapmoi" value="Nhập mới" style="margin-left: 5px;width:100px;
+                            background-color: blue;color:white" onclick="location.href='@Url.Action("Index", "HocPhans/Index")'" />
+                </td>
+            </tr>
+        </table>
+    }
+</div>
+<table class="table">
+    <tr>
+        <th>
+            Tên môn học
+        </th>
+        <th>
+            Tên nhóm
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MonHoc1.TenMH)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenNhom)
+            </td>
+            <td>
+                @Html.ActionLink("Sửa", "Edit", new { id = item.MaNhom }) |
+                @Html.ActionLink("Xóa", "Delete", new { id = item.MaNhom })
+            </td>
+        </tr>
+    }
+
+</table>
+<div class="page-count" style="display: inline-block; vertical-align:middle;">
+    Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) trên @Model.PageCount
+</div>
+<br />
+<div class="pagination" style="display: inline-block; vertical-align: middle;">
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+</div>
